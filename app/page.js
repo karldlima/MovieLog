@@ -1,13 +1,23 @@
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-import styles from "./page.module.css";
+import Movie from "./Movie";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home() {
+export default async function Home() {
+  const data = await fetch(
+    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`
+  );
+  const res = await data.json();
   return (
     <main>
-      <h1>Home</h1>
+      <div className="grid gap-16 grid-cols-fluid">
+        {res.results.map(({ id, title, poster_path, release_date }) => (
+          <Movie
+            key={id}
+            id={id}
+            title={title}
+            posterPath={poster_path}
+            releaseDate={release_date}
+          />
+        ))}
+      </div>
     </main>
   );
 }
